@@ -5,18 +5,21 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
-  Dimensions,
 } from "react-native";
 import RegistrationScreen from "./src/Screens/RegistrationScreen/RegistrationScreen";
 import * as SplashScreen from "expo-splash-screen";
 import { useState, useEffect } from "react";
 import { useFonts } from "expo-font";
+import LoginScreen from "./src/Screens/LoginScreen/LoginScreen";
 
 const backgroundImage = require("./assets/images/bg_new.png");
 
 export default function App() {
-  const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const [visibleScreen, setVisibleScreen] = useState("SignIn");
 
+  const toggleVisibleScreen = (screenName) => {
+    setVisibleScreen(screenName);
+  };
   // const [fontsLoaded] = useFonts({
   //   "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
   //   // "Inter-VariableFont": require("./assets/fonts/Inter-VariableFont.ttf"),
@@ -35,41 +38,19 @@ export default function App() {
   //   SplashScreen.hideAsync();
   // }
 
-  const setShowKeyboard = () => {
-    setKeyboardStatus(true);
-  };
-
-  const keyboardHide = () => {
-    setKeyboardStatus(false);
-    Keyboard.dismiss();
-  };
-
-  useEffect(() => {
-    const showKeyboard = Keyboard.addListener("keyboardDidShow", () => {
-      setKeyboardStatus(true);
-    });
-    const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
-      setKeyboardStatus(false);
-    });
-
-    return () => {
-      showKeyboard.remove();
-      hideKeyboard.remove();
-    };
-  }, []);
-
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        keyboardHide();
+        Keyboard.dismiss();
       }}
     >
       <View style={styles.container}>
         <ImageBackground source={backgroundImage} style={styles.image}>
-          <RegistrationScreen
-            showKeyboard={keyboardStatus}
-            setShowKeyboard={setShowKeyboard}
-          />
+          {visibleScreen === "SignIn" ? (
+            <RegistrationScreen toggleVisibleScreen={toggleVisibleScreen} />
+          ) : (
+            <LoginScreen toggleVisibleScreen={toggleVisibleScreen} />
+          )}
         </ImageBackground>
         <StatusBar style="auto" />
       </View>

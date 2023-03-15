@@ -7,9 +7,10 @@ import {
   Platform,
   KeyboardAvoidingView,
   ImageBackground,
+  Keyboard,
 } from "react-native";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const initialState = {
   login: "",
@@ -19,12 +20,36 @@ const initialState = {
 
 const btnImg = require("../../../assets/images/add.png");
 
-export default RegistrationScreen = ({ showKeyboard, setShowKeyboard }) => {
+export default RegistrationScreen = ({ toggleVisibleScreen }) => {
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [state, setState] = useState(initialState);
+  const [isSequre, setIsSequre] = useState(true);
+
+  const setShowKeyboard = () => {
+    setKeyboardStatus(true);
+  };
+
+  useEffect(() => {
+    const showKeyboard = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardStatus(true);
+    });
+    const hideKeyboard = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardStatus(false);
+    });
+
+    return () => {
+      showKeyboard.remove();
+      hideKeyboard.remove();
+    };
+  });
 
   const handleSubmit = () => {
     console.log(state);
     setState(initialState);
+  };
+
+  const toggleSequrePassword = () => {
+    setIsSequre(!isSequre);
   };
 
   return (
@@ -78,38 +103,47 @@ export default RegistrationScreen = ({ showKeyboard, setShowKeyboard }) => {
             setState((prevState) => ({ ...prevState, email: value }));
           }}
         />
-        <TextInput
+        <View
           style={{
-            ...styles.input,
             marginTop: 16,
-            marginBottom: showKeyboard ? 32 : 0,
+            height: 50,
+            marginBottom: keyboardStatus ? 32 : 0,
           }}
-          placeholder={"Пароль"}
-          placeholderTextColor={"#BDBDBD"}
-          value={state.password}
-          secureTextEntry={true}
-          onFocus={() => {
-            setShowKeyboard();
-          }}
-          onChangeText={(value) => {
-            setState((prevState) => ({ ...prevState, password: value }));
-          }}
-        />
-        <TouchableOpacity style={styles.showPass}>
-          <Text>Показать</Text>
-        </TouchableOpacity>
+        >
+          <TextInput
+            style={styles.input}
+            placeholder={"Пароль"}
+            placeholderTextColor={"#BDBDBD"}
+            value={state.password}
+            secureTextEntry={isSequre}
+            onFocus={() => {
+              setShowKeyboard();
+            }}
+            onChangeText={(value) => {
+              setState((prevState) => ({ ...prevState, password: value }));
+            }}
+          />
+          <TouchableOpacity
+            style={styles.showPass}
+            onPress={toggleSequrePassword}
+          >
+            <Text style={[styles.showPass]}>Показать</Text>
+          </TouchableOpacity>
+        </View>
 
-        {!showKeyboard && (
+        {!keyboardStatus && (
           <>
             <TouchableOpacity
               activeOpacity={0.5}
               style={styles.button}
               onPress={handleSubmit}
             >
-              <Text>Зарегистрироваться</Text>
+              <Text style={styles.btnTitle}>Зарегистрироваться</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              //   onPress={ }
+              onPress={() => {
+                toggleVisibleScreen("LogIn");
+              }}
               style={{
                 marginBottom: 78,
                 alignItems: "center",
@@ -117,7 +151,7 @@ export default RegistrationScreen = ({ showKeyboard, setShowKeyboard }) => {
                 marginHorizontal: 95,
               }}
             >
-              <Text>Уже есть аккаунт? Войти</Text>
+              <Text style={styles.toggleButton}>Уже есть аккаунт? Войти</Text>
             </TouchableOpacity>
           </>
         )}
@@ -142,9 +176,6 @@ const styles = StyleSheet.create({
     width: 120,
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
-
-    borderWidth: 1,
-    borderColor: "red",
   },
   container: { justifyContent: "flex-end" },
   input: {
@@ -153,15 +184,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     backgroundColor: "#F6F6F6",
-    height: 40,
+    height: 50,
     borderRadius: 6,
     fontSize: 16,
     lineHeight: 1.19,
     color: "#212121",
   },
   form: {
-    borderWidth: 1,
-    borderColor: "red",
+    bottom: 0,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
 
@@ -173,9 +203,8 @@ const styles = StyleSheet.create({
     marginBottom: 33,
     marginTop: 32,
     fontSize: 30,
+    fontWeight: 500,
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "red",
   },
   button: {
     borderWidth: 1,
@@ -190,7 +219,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showPass: {
-    top: -28,
-    left: 300,
+    fontSize: 16,
+    top: 8,
+    right: 20,
+    position: "absolute",
+  },
+  btnTitle: {
+    fontSize: 16,
+    color: "#FFFFFF",
+  },
+  toggleButton: {
+    fontSize: 16,
+    color: "#1B4371",
   },
 });
