@@ -5,6 +5,7 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
+  Text,
 } from "react-native";
 import RegistrationScreen from "./src/Screens/RegistrationScreen/RegistrationScreen";
 import * as SplashScreen from "expo-splash-screen";
@@ -20,23 +21,23 @@ export default function App() {
   const toggleVisibleScreen = (screenName) => {
     setVisibleScreen(screenName);
   };
-  // const [fontsLoaded] = useFonts({
-  //   "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-  //   // "Inter-VariableFont": require("./assets/fonts/Inter-VariableFont.ttf"),
-  // });
+  const [fontsLoaded] = useFonts({
+    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+    "Inter-VariableFont": require("./assets/fonts/Inter-VariableFont.ttf"),
+  });
 
-  // useEffect(() => {
-  //   async function prepare() {
-  //     await SplashScreen.preventAutoHideAsync();
-  //   }
-  //   prepare();
-  // }, []);
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare();
+  }, []);
 
-  // if (!fontsLoaded) {
-  //   return undefined;
-  // } else {
-  //   SplashScreen.hideAsync();
-  // }
+  if (!fontsLoaded) {
+    return undefined;
+  } else {
+    SplashScreen.hideAsync();
+  }
 
   return (
     <TouchableWithoutFeedback
@@ -51,6 +52,7 @@ export default function App() {
           ) : (
             <LoginScreen toggleVisibleScreen={toggleVisibleScreen} />
           )}
+          {/* <Text style={{ fontFamily: "Inter-VariableFont" }}>HELLO</Text> */}
         </ImageBackground>
         <StatusBar style="auto" />
       </View>

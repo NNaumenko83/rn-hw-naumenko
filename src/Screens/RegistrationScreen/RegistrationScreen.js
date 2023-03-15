@@ -25,6 +25,10 @@ export default RegistrationScreen = ({ toggleVisibleScreen }) => {
   const [state, setState] = useState(initialState);
   const [isSequre, setIsSequre] = useState(true);
 
+  const [loginInputIsFocused, setLoginInputIsFocused] = useState(false);
+  const [emailInputIsFocused, setEmailInputIsFocused] = useState(false);
+  const [passwordInputIsFocused, setPasswordInputIsFocused] = useState(false);
+
   const setShowKeyboard = () => {
     setKeyboardStatus(true);
   };
@@ -78,26 +82,47 @@ export default RegistrationScreen = ({ toggleVisibleScreen }) => {
           <Text style={styles.title}>Регистрация</Text>
         </View>
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { borderColor: loginInputIsFocused ? "#FF6C00" : "transparent" },
+            {
+              backgroundColor: loginInputIsFocused ? "transparent" : "#F6F6F6",
+            },
+          ]}
           inputMode="text"
           placeholder={"Логин"}
           placeholderTextColor={"#BDBDBD"}
           value={state.login}
           onFocus={() => {
             setShowKeyboard();
+            setLoginInputIsFocused(true);
+          }}
+          onBlur={() => {
+            setLoginInputIsFocused(false);
           }}
           onChangeText={(value) => {
             setState((prevState) => ({ ...prevState, login: value }));
           }}
         />
         <TextInput
-          style={{ ...styles.input, marginTop: 16 }}
+          style={[
+            styles.input,
+            { marginTop: 16 },
+            { borderColor: emailInputIsFocused ? "#FF6C00" : "transparent" },
+            {
+              backgroundColor: emailInputIsFocused ? "transparent" : "#F6F6F6",
+            },
+          ]}
           inputMode="email"
           placeholder={"Адрес электронной почты"}
           placeholderTextColor={"#BDBDBD"}
           value={state.email}
           onFocus={() => {
             setShowKeyboard();
+            setEmailInputIsFocused(true);
+          }}
+          onBlur={() => {
+            setEmailInputIsFocused(false);
           }}
           onChangeText={(value) => {
             setState((prevState) => ({ ...prevState, email: value }));
@@ -111,13 +136,27 @@ export default RegistrationScreen = ({ toggleVisibleScreen }) => {
           }}
         >
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                borderColor: passwordInputIsFocused ? "#FF6C00" : "transparent",
+              },
+              {
+                backgroundColor: passwordInputIsFocused
+                  ? "transparent"
+                  : "#F6F6F6",
+              },
+            ]}
             placeholder={"Пароль"}
             placeholderTextColor={"#BDBDBD"}
             value={state.password}
             secureTextEntry={isSequre}
             onFocus={() => {
               setShowKeyboard();
+              setPasswordInputIsFocused(true);
+            }}
+            onBlur={() => {
+              setPasswordInputIsFocused(false);
             }}
             onChangeText={(value) => {
               setState((prevState) => ({ ...prevState, password: value }));
@@ -147,7 +186,7 @@ export default RegistrationScreen = ({ toggleVisibleScreen }) => {
               style={{
                 marginBottom: 78,
                 alignItems: "center",
-                // borderWidth: 1,
+
                 marginHorizontal: 95,
               }}
             >
@@ -179,15 +218,15 @@ const styles = StyleSheet.create({
   },
   container: { justifyContent: "flex-end" },
   input: {
+    // justifyContent: "center",
     marginHorizontal: 16,
     paddingLeft: 16,
     borderWidth: 1,
     borderColor: "#E8E8E8",
-    backgroundColor: "#F6F6F6",
     height: 50,
     borderRadius: 6,
     fontSize: 16,
-    lineHeight: 1.19,
+    lineHeight: 19,
     color: "#212121",
   },
   form: {
@@ -202,13 +241,12 @@ const styles = StyleSheet.create({
     color: "#212121",
     marginBottom: 33,
     marginTop: 32,
+    fontFamily: "Roboto",
     fontSize: 30,
     fontWeight: 500,
     justifyContent: "center",
   },
   button: {
-    borderWidth: 1,
-    borderColor: "red",
     borderRadius: 100,
     backgroundColor: "#FF6C00",
     marginHorizontal: 16,
@@ -219,16 +257,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showPass: {
+    fontFamily: "Roboto",
     fontSize: 16,
     top: 8,
     right: 20,
     position: "absolute",
   },
   btnTitle: {
+    fontFamily: "Roboto",
     fontSize: 16,
     color: "#FFFFFF",
   },
   toggleButton: {
+    fontFamily: "Roboto",
     fontSize: 16,
     color: "#1B4371",
   },

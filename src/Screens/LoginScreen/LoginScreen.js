@@ -13,7 +13,6 @@ import {
 import { useState, useEffect } from "react";
 
 const initialState = {
-  login: "",
   email: "",
   password: "",
 };
@@ -24,6 +23,8 @@ export default LoginScreen = ({ toggleVisibleScreen }) => {
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   const [state, setState] = useState(initialState);
   const [isSequre, setIsSequre] = useState(true);
+  const [emailInputIsFocused, setEmailInputIsFocused] = useState(false);
+  const [passwordInputIsFocused, setPasswordInputIsFocused] = useState(false);
 
   const setShowKeyboard = () => {
     setKeyboardStatus(true);
@@ -63,13 +64,24 @@ export default LoginScreen = ({ toggleVisibleScreen }) => {
         </View>
 
         <TextInput
-          style={{ ...styles.input, marginTop: 16 }}
+          style={[
+            styles.input,
+            { marginTop: 16 },
+            { borderColor: emailInputIsFocused ? "#FF6C00" : "transparent" },
+            {
+              backgroundColor: emailInputIsFocused ? "transparent" : "#F6F6F6",
+            },
+          ]}
           inputMode="email"
           placeholder={"Адрес электронной почты"}
           placeholderTextColor={"#BDBDBD"}
           value={state.email}
           onFocus={() => {
             setShowKeyboard();
+            setEmailInputIsFocused(true);
+          }}
+          onBlur={() => {
+            setEmailInputIsFocused(false);
           }}
           onChangeText={(value) => {
             setState((prevState) => ({ ...prevState, email: value }));
@@ -83,13 +95,27 @@ export default LoginScreen = ({ toggleVisibleScreen }) => {
           }}
         >
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                borderColor: passwordInputIsFocused ? "#FF6C00" : "transparent",
+              },
+              {
+                backgroundColor: passwordInputIsFocused
+                  ? "transparent"
+                  : "#F6F6F6",
+              },
+            ]}
             placeholder={"Пароль"}
             placeholderTextColor={"#BDBDBD"}
             value={state.password}
             secureTextEntry={isSequre}
             onFocus={() => {
               setShowKeyboard();
+              setPasswordInputIsFocused(true);
+            }}
+            onBlur={() => {
+              setPasswordInputIsFocused(false);
             }}
             onChangeText={(value) => {
               setState((prevState) => ({ ...prevState, password: value }));
@@ -158,8 +184,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     height: 50,
     borderRadius: 6,
+    fontFamily: "Roboto",
     fontSize: 16,
-    lineHeight: 1.19,
+    lineHeight: 19,
     color: "#212121",
   },
   form: {
@@ -174,13 +201,12 @@ const styles = StyleSheet.create({
     color: "#212121",
     marginBottom: 33,
     marginTop: 32,
+    fontFamily: "Roboto",
     fontSize: 30,
     fontWeight: 500,
     justifyContent: "center",
   },
   button: {
-    borderWidth: 1,
-    borderColor: "red",
     borderRadius: 100,
     backgroundColor: "#FF6C00",
     marginHorizontal: 16,
@@ -191,16 +217,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showPass: {
+    fontFamily: "Roboto",
     fontSize: 16,
     top: 8,
     right: 20,
     position: "absolute",
   },
   btnTitle: {
+    fontFamily: "Roboto",
     fontSize: 16,
     color: "#FFFFFF",
   },
   toggleButton: {
+    fontFamily: "Roboto",
     fontSize: 16,
     color: "#1B4371",
   },
