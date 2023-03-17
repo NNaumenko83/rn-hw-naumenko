@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
     fontFamily: "Roboto",
     fontSize: 30,
-    fontWeight: 500,
+    // fontWeight: 500,
     justifyContent: "center",
   },
   button: {
